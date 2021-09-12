@@ -34,9 +34,11 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MovieHolder holder, int position) {
         Movie movie=movieList.get(position);
+
+        System.out.println("Json_response "+movie.getTitle() +" "+movie.getRating()+" "+movie.getPoster());
         holder.rating.setText(movie.getRating().toString());
         holder.title.setText(movie.getTitle());
-        Glide.with(context).load(movie.getPoster()).into(holder.imageView);
+        Glide.with(context).load("https://image.tmdb.org/t/p/w500"+movie.getPoster()).into(holder.imageView);
     }
 
     @Override
