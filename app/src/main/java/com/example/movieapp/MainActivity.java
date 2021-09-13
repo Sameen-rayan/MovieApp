@@ -13,6 +13,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,36 +43,52 @@ public class MainActivity extends AppCompatActivity {
 
     private void fetchMovies() {
 
-        String url="https://api.themoviedb.org/3/movie/top_rated?api_key=444af2163761ddcc669d41dd7b035d7d&language=en-US&page=1";
+        String url="https://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&page=1&api_key=3fa9058382669f72dcb18fb405b7a831&gt;";
 
-        JsonArrayRequest jsonArrayRequest= new JsonArrayRequest(Request.Method.GET, url, null, new Response.Listener<JSONArray>() {
-            @Override
-            public void onResponse(JSONArray response) {
-                for(int i=0;i<response.length();i++){
-                    try {
-                        JSONObject jsonObject= response.getJSONObject(i);
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
 
-                        String title=jsonObject.getString("title");
-                        String poster=jsonObject.getString("poster_path");
-                        Double rating=jsonObject.getDouble("vote_average");
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray jsonArray= response.getJSONArray("results");
 
-                        Movie movie= new Movie(title,poster,rating);
-                        movieList.add(movie);
+                            for(int i=0;i<jsonArray.length();i++){
+                                try {
+                                    JSONObject jsonObject= jsonArray.getJSONObject(i);
+                                    String title=jsonObject.getString("title");
+                                    String poster=jsonObject.getString("poster_path");
+                                    String photo=jsonObject.getString("backdrop_path");
+                                    Double rating=jsonObject.getDouble("vote_average");
+                                    String date=jsonObject.getString("release_date");
+                                    String overview=jsonObject.getString("overview");
+                                    Integer id=jsonObject.getInt("id");
 
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+                                    Movie movie= new Movie(title,poster,rating,date,overview,id,photo);
+                                    movieList.add(movie);
+
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            MovieAdapter adapter=new MovieAdapter(MainActivity.this,movieList);
+                            recyclerView.setAdapter(adapter);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
-                    MovieAdapter adapter=new MovieAdapter(MainActivity.this,movieList);
-                    recyclerView.setAdapter(adapter);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Toast.makeText(MainActivity.this,error.getMessage(),Toast.LENGTH_SHORT).show();
-            }
-        });
+                }, new Response.ErrorListener() {
 
-        requestQueue.add(jsonArrayRequest);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // TODO: Handle error
+
+                    }
+                });
+
+
+
+        requestQueue.add(jsonObjectRequest);
     }
 }

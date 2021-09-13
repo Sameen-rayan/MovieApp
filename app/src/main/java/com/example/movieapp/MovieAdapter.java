@@ -1,6 +1,8 @@
 package com.example.movieapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -34,9 +37,27 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
     @Override
     public void onBindViewHolder(@NonNull MovieAdapter.MovieHolder holder, int position) {
         Movie movie=movieList.get(position);
+
+        System.out.println("Json_response "+movie.getTitle() +" "+movie.getRating()+" "+movie.getPoster());
         holder.rating.setText(movie.getRating().toString());
         holder.title.setText(movie.getTitle());
-        Glide.with(context).load(movie.getPoster()).into(holder.imageView);
+        Glide.with(context).load("https://image.tmdb.org/t/p/w500"+movie.getPoster()).into(holder.imageView);
+        holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(context,DetailActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putString("title",movie.getTitle());
+                bundle.putDouble("vote_average",movie.getRating());
+                bundle.putString("poster_path",movie.getPoster());
+                bundle.putString("overview", movie.getOverview());
+                bundle.putString("release_date", movie.getReleasedate());
+                bundle.putInt("id",movie.getId());
+                bundle.putString("backdrop_path",movie.getPhoto());
+                intent.putExtras(bundle);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,12 +69,14 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieHolder>
 
         ImageView imageView;
         TextView title,rating;
-
+        ConstraintLayout constraintLayout;
         public MovieHolder(@NonNull View itemView) {
             super(itemView);
-            imageView=itemView.findViewById(R.id.poster);
-            title=itemView.findViewById(R.id.title);
+            imageView=itemView.findViewById(R.id.photo);
+            title=itemView.findViewById(R.id.name);
             rating=itemView.findViewById(R.id.rating);
+            constraintLayout=itemView.findViewById(R.id.main_layout);
+            System.out.println(title+""+rating+""+R.id.photo);
         }
     }
 }
