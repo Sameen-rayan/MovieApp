@@ -1,23 +1,27 @@
 package com.example.movieapp;
 
 public class Cast {
-    private static String name;
-    static String photoPath;
+    String name;
+    String photoPath;
 
-    public Cast(String name,String photoPath)
-    {
-        this.name=name;
-        this.photoPath=photoPath;
+    public Cast(String name, String photoPath) {
+        this.name = name;
+        this.photoPath = photoPath;
     }
 
-    public static String getName() {
+    public String getName() {
         return name;
     }
 
-    public static String getPhotoPath() {
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhotoPath() {
         return photoPath;
     }
 
-
-
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
+    }
 }

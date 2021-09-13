@@ -35,8 +35,9 @@ public class CastAdapter extends RecyclerView.Adapter<CastAdapter.CastHolder> {
         Cast cast=CastList.get(position);
 
         System.out.println("Json_response "+cast.getName() +" "+" "+cast.getPhotoPath());
-        holder.textView.setText(Cast.getName());
-        Glide.with(context).load("https://image.tmdb.org/t/p/w500"+Cast.getPhotoPath()).into(holder.imageView);
+        holder.textView.setText(cast.getName());
+        if(cast.getPhotoPath() != null)
+            Glide.with(context).load("https://image.tmdb.org/t/p/w500"+cast.getPhotoPath()).into(holder.imageView);
     }
 
     @Override

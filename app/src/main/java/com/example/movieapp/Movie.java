@@ -25,6 +25,7 @@ public class Movie {
     private String overview;
     private Double rating;
     private Integer id;
+
     public Movie(String title,String poster,Double rating,String releasedate,String overview,Integer id,String photo){
         this.title=title;
         this.poster=poster;
